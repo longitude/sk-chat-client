@@ -1,8 +1,6 @@
 ### Simple chat client in react and socket.io
 
-This app was bootstrapped using create-react-app
-
-Corresponding server and instructions to start the server are available [here](https://github.com/longitude/sk-chat-server)
+![client demo](https://raw.githubusercontent.com/longitude/sk-chat-client/master/src/chat-client.gif)
 
 ### Installation
 
@@ -15,3 +13,7 @@ npm i
 ```js
 npm start
 ```
+
+This app was bootstrapped using create-react-app
+
+Corresponding server and instructions to start the server are available [here](https://github.com/longitude/sk-chat-server)
