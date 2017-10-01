@@ -1,6 +1,6 @@
 ### Simple chat client in react and socket.io
 
-![client demo](https://raw.githubusercontent.com/longitude/sk-chat-client/master/src/chat-client.gif)
+![client demo](https://raw.githubusercontent.com/longitude/sk-chat-client/master/chat-client.gif)
 
 ### Installation
 
