@@ -372,12 +372,15 @@ class Messages extends Component {
         if (message.messageTime > this.props.logoutTime) {
           return (
             <div className="bold-messages" key={message._id}>
-              {" "}
-              {message.message}{" "}
+              {message.from} : {message.message}
             </div>
           );
         } else {
-          return <div key={message._id}> {message.message} </div>;
+          return (
+            <div key={message._id}>
+              {message.from} : {message.message}
+            </div>
+          );
         }
       }.bind(this)
     );
