@@ -4,26 +4,23 @@ import { Route, NavLink } from "react-router-dom";
 import "./App.css";
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      users: [],
-      loggedInUser: "",
-      logoutTime: "",
-      rooms: [],
-      messageTo: "",
-      messages: []
-    };
-  }
+  state = {
+    users: [],
+    loggedInUser: "",
+    logoutTime: "",
+    rooms: [],
+    messageTo: "",
+    messages: []
+  };
 
-  updateChatTo(messageTo, user) {
+  updateChatTo = (messageTo, user) => {
     this.setState({ messageTo });
     this.getMessages(messageTo, user);
-  }
+  };
 
-  clearChatTo(messageTo) {
+  clearChatTo = messageTo => {
     this.setState({ messageTo: "", messages: [] });
-  }
+  };
 
   componentDidMount() {
     var socket = io.connect("http://localhost:3000");
@@ -50,7 +47,7 @@ class App extends Component {
     });
   }
 
-  createRoom(roomName) {
+  createRoom = roomName => {
     fetch("http://localhost:3000/rooms", {
       method: "POST",
       headers: {
@@ -61,9 +58,9 @@ class App extends Component {
         roomName: roomName
       })
     }).catch(err => console.log(err));
-  }
+  };
 
-  loginUser(userName) {
+  loginUser = userName => {
     fetch("http://localhost:3000/users?username=" + userName)
       .then(response => {
         return response.json().then(responseJSON => {
@@ -76,9 +73,9 @@ class App extends Component {
         });
       })
       .catch(err => console.log(err));
-  }
+  };
 
-  logoutUser(userName) {
+  logoutUser = userName => {
     fetch("http://localhost:3000/logout", {
       method: "POST",
       headers: {
@@ -102,9 +99,9 @@ class App extends Component {
         });
       })
       .catch(err => console.log(err));
-  }
+  };
 
-  getRooms() {
+  getRooms = () => {
     fetch("http://localhost:3000/rooms")
       .then(response => {
         return response.json().then(responseJSON => {
@@ -112,9 +109,9 @@ class App extends Component {
         });
       })
       .catch(err => console.log(err));
-  }
+  };
 
-  getUsers() {
+  getUsers = () => {
     fetch("http://localhost:3000/users")
       .then(response => {
         return response.json().then(responseJSON => {
@@ -122,9 +119,9 @@ class App extends Component {
         });
       })
       .catch(err => console.log(err));
-  }
+  };
 
-  postMessages(message, room) {
+  postMessages = (message, room) => {
     fetch("http://localhost:3000/messages", {
       method: "POST",
       headers: {
@@ -144,7 +141,7 @@ class App extends Component {
         this.setState({ logoutTime: n });
       })
       .catch(err => console.log(err));
-  }
+  };
 
   getMessages(messagesTo, user) {
     let url = "http://localhost:3000/messages?to=" + messagesTo;
@@ -170,7 +167,7 @@ class App extends Component {
             <NavLink activeClassName="active" to="/rooms">
               ROOMS
             </NavLink>
-            <a className="logout" onClick={this.logoutUser.bind(this)}>
+            <a className="logout" onClick={this.logoutUser}>
               LOGOUT
             </a>
           </nav>
@@ -186,10 +183,10 @@ class App extends Component {
                   logoutTime={this.state.logoutTime}
                   messageTo={this.state.messageTo}
                   messages={this.state.messages}
-                  updateChatTo={this.updateChatTo.bind(this)}
-                  postMessages={this.postMessages.bind(this)}
-                  clearChatTo={this.clearChatTo.bind(this)}
-                  getUsers={this.getUsers.bind(this)}
+                  updateChatTo={this.updateChatTo}
+                  postMessages={this.postMessages}
+                  clearChatTo={this.clearChatTo}
+                  getUsers={this.getUsers}
                 />
               )}
             />
@@ -204,11 +201,11 @@ class App extends Component {
                   logoutTime={this.state.logoutTime}
                   messageTo={this.state.messageTo}
                   messages={this.state.messages}
-                  postMessages={this.postMessages.bind(this)}
-                  updateChatTo={this.updateChatTo.bind(this)}
-                  clearChatTo={this.clearChatTo.bind(this)}
-                  getRooms={this.getRooms.bind(this)}
-                  createRoom={this.createRoom.bind(this)}
+                  postMessages={this.postMessages}
+                  updateChatTo={this.updateChatTo}
+                  clearChatTo={this.clearChatTo}
+                  getRooms={this.getRooms}
+                  createRoom={this.createRoom}
                 />
               )}
             />
@@ -216,20 +213,16 @@ class App extends Component {
         </div>
       );
     } else {
-      return <Login loginUser={this.loginUser.bind(this)} />;
+      return <Login loginUser={this.loginUser} />;
     }
   }
 }
 
-class Logout extends Component {
-  render() {
-    return (
-      <button className="logout" onClick={this.props.logoutUser}>
-        LOGOUT
-      </button>
-    );
-  }
-}
+var Logout = props => (
+  <button className="logout" onClick={this.props.logoutUser}>
+    LOGOUT
+  </button>
+);
 
 class Users extends Component {
   componentDidMount() {
@@ -289,13 +282,13 @@ class Rooms extends Component {
     this.props.getRooms();
   }
 
-  createRoom(e) {
+  createRoom = e => {
     e.preventDefault();
     if (this.room.value) {
       this.props.createRoom(this.room.value);
       this.room.value = "";
     }
-  }
+  };
   render() {
     let rooms = this.props.rooms.map(room => {
       return (
@@ -334,7 +327,7 @@ class Rooms extends Component {
 
     return (
       <div className="rooms-messages">
-        <form className="rooms" onSubmit={this.createRoom.bind(this)}>
+        <form className="rooms" onSubmit={this.createRoom}>
           {rooms}
           <input
             type="text"
@@ -361,31 +354,31 @@ class Messages extends Component {
     this.props.clearChatTo();
   }
 
-  postMessages(event) {
+  postMessages = event => {
     event.preventDefault();
     this.props.postMessages(this.message.value, this.props.room);
     this.message.value = "";
-  }
+  };
+
   render() {
-    let messages = this.props.messages.map(
-      function(message) {
-        if (message.messageTime > this.props.logoutTime) {
-          return (
-            <div className="bold-messages" key={message._id}>
-              {message.from} : {message.message}
-            </div>
-          );
-        } else {
-          return (
-            <div key={message._id}>
-              {message.from} : {message.message}
-            </div>
-          );
-        }
-      }.bind(this)
-    );
+    let messages = this.props.messages.map(message => {
+      if (message.messageTime > this.props.logoutTime) {
+        return (
+          <div className="bold-messages" key={message._id}>
+            {message.from} : {message.message}
+          </div>
+        );
+      } else {
+        return (
+          <div key={message._id}>
+            {message.from} : {message.message}
+          </div>
+        );
+      }
+    });
+
     return (
-      <form onSubmit={this.postMessages.bind(this)}>
+      <form onSubmit={this.postMessages}>
         <div className="messages">
           {messages}
           <input
@@ -401,7 +394,7 @@ class Messages extends Component {
 }
 
 class Login extends Component {
-  SignupUser() {
+  SignupUser = () => {
     fetch("http://localhost:3000/users", {
       method: "POST",
       headers: {
@@ -421,20 +414,20 @@ class Login extends Component {
         });
       })
       .catch(err => console.log(err));
-  }
+  };
 
-  loginUser(event) {
+  loginUser = event => {
     event.preventDefault();
     if (this.text.value) {
       this.props.loginUser(this.text.value);
     }
-  }
+  };
   render() {
     return (
       <form>
         <input type="text" ref={input => (this.text = input)} />
-        <button onClick={this.loginUser.bind(this)}>login</button>
-        <button onClick={this.SignupUser.bind(this)}>signup</button>
+        <button onClick={this.loginUser}>login</button>
+        <button onClick={this.SignupUser}>signup</button>
       </form>
     );
   }
